@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive React App with Slider</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 60px;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f9f9f9;
+      padding: 10px 20px;
+      border-radius: 0;
+      color: #333;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .navbar-menu {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-menu ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-menu li {
+      margin: 0 10px;
+    }
+
+    .navbar-menu a {
+      color: #333;
+      text-decoration: none;
+      padding: 10px 15px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar-menu a:hover {
+      background-color: #e0e0e0;
+      border-radius: 5px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .search-button {
+      background: none;
+      border: none;
+      color: #333;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      color: #333;
+      margin-left: 15px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .hamburger-menu {
+      display: none;
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .profile-button-container {
+      display: none;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .profile-button-container img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+      max-height: 300px;
+    }
+
+    .mobile-menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .mobile-menu li {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .mobile-menu a {
+      color: #333;
+      text-decoration: none;
+      padding: 10px 15px;
+      display: block;
+      text-align: center;
+    }
+
+    .mobile-menu a:hover {
+      background-color: #e0e0e0;
+    }
+
+    .mobile-menu a:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 600px) {
+      .navbar-menu {
+        display: none;
+      }
+
+      .hamburger-menu {
+        display: block;
+      }
+
+      .profile-button-container {
+        display: flex;
+        position: absolute;
+        top: 10px;
+        right: 60px;
+        z-index: 1001;
+      }
+
+      .search-bar {
+        margin: 10px 0;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .user-profile-mobile {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+
+      .user-profile-mobile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+    }
+
+    .heading-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 100vw;
+      margin: 0;
+      padding: 0 20px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+    }
+
+    .heading-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .heading-button {
+      background-color: #f0f0f0;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .heading-button:hover {
+      background-color: #e0e0e0;
+      color: #000;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 5px;
+      text-align: center;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .card-image {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .card-title {
+      margin: 15px 0;
+      font-size: 18px;
+    }
+
+    .card-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .card-button, .like-button {
+      background-color: #f0f0f0;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .card-button:hover, .like-button:hover {
+      background-color: #e0e0e0;
+      color: #000;
+    }
+
+    .like-button {
+      background-color: #fff;
+    }
+
+    .slider-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      height: 400px; /* Adjusted height */
+      margin: 20px auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .slider-content {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 400px; /* Adjusted height */
+      box-sizing: border-box;
+      display: flex;
+    }
+
+    .slide-text {
+      width: 50%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-image {
+      width: 50%;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .slider-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%; /* Make the button a circle */
+      width: 40px; /* Adjust the width to make it a circle */
+      height: 40px; /* Adjust the height to make it a circle */
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 1;
+      display: flex;
+      justify-content: center; /* Center the text horizontally */
+      align-items: center; /* Center the text vertically */
+    }
+
+    .prev-button {
+      left: 10px;
+    }
+
+    .next-button {
+      right: 10px;
+    }
+    footer {
+      background-color: white;
+      color: black;
+      padding: 20px 0;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      flex-wrap: wrap;
+    }
+
+    .footer-section {
+      flex: 1;
+      margin: 20px;
+      min-width: 100px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .footer-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #444;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: black;
+    }
+
+    .footer-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-input {
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .footer-button {
+      padding: 10px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .footer-button:hover {
+      background-color: #555;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel Script -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- React Code -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function Navbar() {
+      const [searchQuery, setSearchQuery] = useState('');
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+      };
+
+      const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        console.log('Search query:', searchQuery);
+        // Handle the search logic here
+      };
+
+      const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+      };
+
+      return (
+        <nav className="navbar">
+          <div className="brand-logo">
+            <img src="https://via.placeholder.com/40" alt="Brand Logo" />
+          </div>
+          <button className="hamburger-menu" onClick={toggleMobileMenu}>
+            ☰
+          </button>
+          <div className="profile-button-container">
+            <img src="https://via.placeholder.com/40" alt="User Profile" />
+          </div>
+          <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+            <form onSubmit={handleSearchSubmit} className="search-bar">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <button type="submit" className="search-button">
+                🔍
+              </button>
+            </form>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div className="navbar-menu">
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div className="search-bar">
+              <form onSubmit={handleSearchSubmit}>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+                <button type="submit" className="search-button">
+                  🔍
+                </button>
+              </form>
+            </div>
+            <button className="icon-button">🔔</button>
+            <button className="icon-button">✉️</button>
+            <div className="user-profile">
+              <img src="https://via.placeholder.com/40" alt="User Profile" />
+            </div>
+          </div>
+        </nav>
+      );
+    }
+
+    function HeadingWithButton({ title, buttonText }) {
+      return (
+        <div className="heading-container">
+          <div className="heading-title">{title}</div>
+          <button className="heading-button">{buttonText}</button>
+        </div>
+      );
+    }
+
+    function Card({ imageSrc, title }) {
+      const [liked, setLiked] = useState(false);
+
+      const handleLike = () => {
+        setLiked(!liked);
+      };
+
+      return (
+        <div className="card">
+          <img src={imageSrc} alt={title} className="card-image" />
+          <div className="card-title">{title}</div>
+          <div className="card-buttons">
+            <button className="card-button">See More</button>
+            <button className="like-button" onClick={handleLike}>
+              {liked ? '❤️' : '🤍'}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function Slider() {
+      const [currentSlide, setCurrentSlide] = useState(0);
+      const slides = [
+        {
+          image: "https://via.placeholder.com/800x400/FF5733",
+          text: "Slide 1 Description"
+        },
+        {
+          image: "https://via.placeholder.com/800x400/33FF57",
+          text: "Slide 2 Description"
+        },
+        {
+          image: "https://via.placeholder.com/800x400/3357FF",
+          text: "Slide 3 Description"
+        },
+        {
+          image: "https://via.placeholder.com/800x400/FF33A1",
+          text: "Slide 4 Description"
+        },
+        {
+          image: "https://via.placeholder.com/800x400/FFAA33",
+          text: "Slide 5 Description"
+        }
+      ];
+
+      const handlePrevSlide = () => {
+        setCurrentSlide((prevSlide) => (prevSlide === 0 ? slides.length - 1 : prevSlide - 1));
+      };
+
+      const handleNextSlide = () => {
+        setCurrentSlide((prevSlide) => (prevSlide === slides.length - 1 ? 0 : prevSlide + 1));
+      };
+
+      return (
+        <div className="slider-container">
+          <button className="slider-button prev-button" onClick={handlePrevSlide}>❮</button>
+          <div className="slider-content" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            {slides.map((slide, index) => (
+              <div key={index} className="slide">
+                <div className="slide-text">
+                  <h2>{`Slide ${index + 1}`}</h2>
+                  <p>{slide.text}</p>
+                </div>
+                <img src={slide.image} alt={`Slide ${index + 1}`} className="slide-image" />
+              </div>
+            ))}
+          </div>
+          <button className="slider-button next-button" onClick={handleNextSlide}>❯</button>
+        </div>
+      );
+    }
+    function Footer() {
+      return (
+        <footer>
+          <div className="footer-content">
+            <div className="footer-section">
+              <div className="footer-logo">
+                <img src="brand-logo.png" alt="Brand Logo" />
+                <span>BrandName</span>
+              </div>
+            </div>
+            <div className="footer-section">
+              <h2 className="footer-title">Company</h2>
+              <ul className="footer-links">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Press</a></li>
+                <li><a href="#">Blog</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h2 className="footer-title">Resources</h2>
+              <ul className="footer-links">
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Contact Support</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h2 className="footer-title">Community</h2>
+              <ul className="footer-links">
+                <li><a href="#">Forums</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Meetups</a></li>
+                <li><a href="#">Open Source</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h2 className="footer-title">Stay Updated</h2>
+              <form className="footer-form">
+                <input type="email" className="footer-input" placeholder="Enter your email" />
+                <button className="footer-button">Subscribe</button>
+              </form>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="container">
+          <Navbar />
+          <h1>Hi there!!!</h1>
+          <HeadingWithButton title="Our Cards-1" buttonText="See More" />
+          <div className="cards-container">
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 1" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 2" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 3" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 4" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 5" />
+          </div>
+          <Slider />
+          <HeadingWithButton title="Our Cards-2" buttonText="See More" />
+          <div className="cards-container">
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 1" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 2" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 3" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 4" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 5" />
+          </div>
+          <HeadingWithButton title="Our Cards-3" buttonText="See More" />
+          <div className="cards-container">
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 1" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 2" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 3" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 4" />
+            <Card imageSrc="https://via.placeholder.com/150" title="Card 5" />
+          </div>
+          <Footer />
+        </div>
+      );
+    }
+
+    // Render the App component to the DOM
+    const domNode = document.getElementById('app');
+    const root = ReactDOM.createRoot(domNode);
+    root.render(<App />);
+  </script>
+</body>
+</html>
